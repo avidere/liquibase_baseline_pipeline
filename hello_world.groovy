@@ -1,4 +1,5 @@
-@Library('liquibase_shared_library') _
+@Library('liquibase_shared_library')
+import java.text.SimpleDateFormat
 pipeline {
     agent any
 
