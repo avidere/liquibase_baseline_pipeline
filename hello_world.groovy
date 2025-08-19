@@ -35,7 +35,7 @@ pipeline {
         stage('code checkout') {
             steps {
                 script {
-                    codeCkeckout()
+                    codeCheckout()
                 }
             }
         }
