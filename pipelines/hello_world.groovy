@@ -23,19 +23,19 @@ properties([
 ])
 pipeline {
     agent any
-
     stages {
         stage('clean workspace') {
             steps {
                 script {
                     cleanWs()
+                    codeCheckout()
                 }
             }
         }
-        stage('code checkout') {
+        stage('Liquibase Execution') {
             steps {
                 script {
-                    codeCheckout()
+                    bat 'liquibase update'
                 }
             }
         }
@@ -43,6 +43,16 @@ pipeline {
     post {
         always {
             echo 'Pipeline completed.'
+        }
+    }
+    success {
+        echo 'Pipeline succeeded.'
+    }
+    failure {
+        echo 'executing rollback due to failure'
+
+        script {
+            bat 'liquibase rollback tag=rollback_tagversion_1.3'
         }
     }
 }
