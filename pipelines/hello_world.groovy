@@ -41,18 +41,18 @@ pipeline {
         }
     }
     post {
-        always {
-            echo 'Pipeline completed.'
+            always {
+                echo 'Pipeline completed.'
+            }
+        success {
+            echo 'Pipeline succeeded.'
         }
-    }
-    success {
-        echo 'Pipeline succeeded.'
-    }
-    failure {
-        echo 'executing rollback due to failure'
+        failure {
+            echo 'executing rollback due to failure'
 
-        script {
-            bat 'liquibase rollback tag=rollback_tagversion_1.3'
+            script {
+                bat 'liquibase rollback tag=rollback_tagversion_1.3'
+            }
         }
     }
 }
