@@ -23,6 +23,7 @@ properties([
 ])
 pipeline {
     environment {
+        PATH = "/liquibase:$PATH"
         flowfiledeployment = 'liquibase-ci.flowfile.yaml'
     }
     agent any
@@ -39,6 +40,7 @@ pipeline {
             steps {
                 script {
                     liquibaseFlow.appci(flowfiledeployment)
+
                 }
             }
         }
