@@ -11,12 +11,12 @@ properties([
         ),
         string(
             name: 'REPOSITORY_NAME',
-            defaultValue: 'Ansible-Deployment',
+            defaultValue: 'liquibase_actions',
             description: 'Repository name for the Liquibase project'
         ),
         string(
             name: 'BRANCH_NAME', 
-            defaultValue: 'main', 
+            defaultValue: 'master', 
             description: 'Branch name to checkout'
         ),
     ])
@@ -35,7 +35,7 @@ pipeline {
         stage('Liquibase Execution') {
             steps {
                 script {
-                    bat 'liquibase update'
+                    liquibaseFlow.appci()
                 }
             }
         }
@@ -51,7 +51,7 @@ pipeline {
             echo 'executing rollback due to failure'
 
             script {
-                bat 'liquibase rollback tag=rollback_tagversion_1.3'
+                sh 'liquibase rollback tag=rollback_tagversion_1.3'
             }
         }
     }
