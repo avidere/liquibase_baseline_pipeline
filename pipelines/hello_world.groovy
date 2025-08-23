@@ -22,6 +22,9 @@ properties([
     ])
 ])
 pipeline {
+    environment {
+        flowfiledeployment = 'liquibase-ci.flowfile.yaml'
+    }
     agent any
     stages {
         stage('clean workspace') {
@@ -35,7 +38,7 @@ pipeline {
         stage('Liquibase Execution') {
             steps {
                 script {
-                    liquibaseFlow.appci()
+                    liquibaseFlow.appci(flowfiledeployment)
                 }
             }
         }
