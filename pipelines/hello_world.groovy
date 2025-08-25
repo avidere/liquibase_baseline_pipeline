@@ -1,6 +1,7 @@
-@Library('liquibase_shared_library')
+@Library(['liquibase_shared_library@main', 'liquibase_devops_controls@main']) _
 import java.text.SimpleDateFormat
 loadEnvVars()
+devopsControls()
 
 properties([
     parameters([
@@ -11,21 +12,28 @@ properties([
         ),
         string(
             name: 'REPOSITORY_NAME',
-            defaultValue: 'liquibase_actions',
+            defaultValue: 'Ansible-Deployment',
             description: 'Repository name for the Liquibase project'
         ),
         string(
-            name: 'BRANCH_NAME', 
-            defaultValue: 'master', 
+            name: 'BRANCH_NAME',
+            defaultValue: 'master',
             description: 'Branch name to checkout'
         ),
+        string(
+            name: 'CHANELOG_FILE',
+            defaultValue: 'changelog.xml',
+            description: 'Changelog file for Liquibase'
+        )
+        string(
+            name: 'ENVIRONMENT',
+            choices: ['dev', 'qa', 'prod'],
+            description: 'Select the environment to deploy to'
+        )
     ])
 ])
 pipeline {
-    environment {
-        PATH = "/liquibase:$PATH"
-        flowfiledeployment = 'liquibase-ci.flowfile.yaml'
-    }
+
     agent any
     stages {
         stage('clean workspace') {
@@ -36,12 +44,14 @@ pipeline {
                 }
             }
         }
-        stage('Liquibase Execution') {
+        stage('Liquibase Update Cassandra') {
             steps {
-                script {
-                    liquibaseFlow.appci(flowfiledeployment)
+                   bat"""
+                   
+                    liquibase update
 
-                }
+                   """
+                
             }
         }
     }
@@ -56,7 +66,7 @@ pipeline {
             echo 'executing rollback due to failure'
 
             script {
-                sh 'liquibase rollback tag=rollback_tagversion_1.3'
+                bat 'liquibase rollback tag=rollback_tagversion_1.3'
             }
         }
     }
