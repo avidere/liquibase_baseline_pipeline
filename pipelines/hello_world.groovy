@@ -22,10 +22,10 @@ properties([
         ),
         string(
             name: 'CHANELOG_FILE',
-            defaultValue: 'changelog.xml',
+            defaultValue: 'changelog/changelog.xml',
             description: 'Changelog file for Liquibase'
         ),
-        string(
+        choice(
             name: 'ENVIRONMENT',
             choices: ['dev', 'qa', 'prod'],
             description: 'Select the environment to deploy to'
