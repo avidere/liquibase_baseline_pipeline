@@ -6,13 +6,13 @@ devopsControls()
 properties([
     parameters([
         string(
-            name: 'PROJECT_KEY', 
-            defaultValue: 'avidere', 
+            name: 'PROJECT_KEY',
+            defaultValue: 'avidere',
             description: 'Project key for the Liquibase project'
         ),
         string(
             name: 'REPOSITORY_NAME',
-            defaultValue: 'Ansible-Deployment',
+            defaultValue: 'liquibase_actions',
             description: 'Repository name for the Liquibase project'
         ),
         string(
@@ -24,7 +24,7 @@ properties([
             name: 'CHANELOG_FILE',
             defaultValue: 'changelog.xml',
             description: 'Changelog file for Liquibase'
-        )
+        ),
         string(
             name: 'ENVIRONMENT',
             choices: ['dev', 'qa', 'prod'],
