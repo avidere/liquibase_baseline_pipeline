@@ -34,6 +34,7 @@ properties([
 ])
 pipeline {
 
+
     agent any
     stages {
         stage('clean workspace') {
@@ -41,10 +42,21 @@ pipeline {
                 script {
                     cleanWs()
                     codeCheckout()
+                    def VAULT_TOKEN="hvs.CAESIH1PWFhPNVnvW9q-Z7a72qKC1KBSFlkDe9QxtNF0VQKaGigKImh2cy5qSTYzSlNvU0ZLVmFOcFpqcUxFTng3UkQueDNqREEQmLsG"
+                    def props = readFile('liquibase.properties')
+                    props = props.replace('${dbUrl}', env.dbUrl)
+                                 .replace('${username}', env.username)
+                                 .replace('${password}', env.password)
+                                 .replace('${vaultAddress}', env.vaultAddress)
+                                 .replace('${vaultPath}', env.vaultPath)
+                                 .replace('${vaultToken}', env.VAULT_TOKEN)
+                    writeFile(file: 'liquibase.properties', text: props)
+
+                   
                 }
             }
         }
-        stage('Liquibase Update Cassandra') {
+        stage('Liquibase Execution') {
             steps {
                    bat"""
                    
