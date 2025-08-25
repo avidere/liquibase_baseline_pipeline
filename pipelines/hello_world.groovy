@@ -49,7 +49,7 @@ pipeline {
                                  .replace('${password}', env.password)
                                  .replace('${vaultAddress}', env.vaultAddress)
                                  .replace('${vaultPath}', env.vaultPath)
-                                 .replace('${vaultToken}', env.VAULT_TOKEN)
+                                 .replace('${vaultToken}', env.vaultToken)
                     writeFile(file: 'liquibase.properties', text: props)
 
                    
