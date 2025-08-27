@@ -43,18 +43,11 @@ pipeline {
                 script {
                     cleanWs()
                     codeCheckout()
-                    
-                    def props = readFile('liquibase.properties')
-                    props = props.replace('${dbUrl}', env.dbUrl)
-                                 .replace('${username}', env.username)
-                                 .replace('${password}', env.password)
-                                 .replace('${vaultAddress}', env.vaultAddress)
-                                 .replace('${vaultPath}', env.vaultPath)
-                                 .replace('${vaultNS}', env.vaultNS)
-                                 .replace('${driver}', env.driver)
-                    writeFile(file: 'liquibase.properties', text: props)
-
-                   
+                    sh """
+                    set +xv
+                    envsubst < liquibase.properties > liquibase_temp.properties
+                    mv liquibase_temp.properties liquibase.properties
+                    """
                 }
             }
         }
