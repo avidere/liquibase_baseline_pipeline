@@ -43,21 +43,21 @@ pipeline {
                 script {
                     cleanWs()
                     codeCheckout()
-                    sh """
+                    sh '''
                     set +xv
                     envsubst < liquibase.properties > liquibase_temp.properties
                     mv liquibase_temp.properties liquibase.properties
-                    """
+                    '''
                 }
             }
         }
         stage('Liquibase Execution') {
             steps {
-                   bat"""
+                sh'''
                    
                     liquibase update
 
-                   """
+                   '''
                 
             }
         }
@@ -73,7 +73,7 @@ pipeline {
             echo 'executing rollback due to failure'
 
             script {
-                bat 'liquibase rollback tag=rollback_tagversion_1.3'
+                sh 'liquibase rollback tag=rollback_tagversion_1.3'
             }
         }
     }
