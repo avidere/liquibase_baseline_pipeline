@@ -34,7 +34,9 @@ properties([
 ])
 pipeline {
         environment {
+            liquibaseDeploymentFlow = 'liquibase-ci.flowfile.yaml'
             VAULT_TOKEN="hvs.CAESIH1PWFhPNVnvW9q-Z7a72qKC1KBSFlkDe9QxtNF0VQKaGigKImh2cy5qSTYzSlNvU0ZLVmFOcFpqcUxFTng3UkQueDNqREEQmLsG"
+            Tag = rollback_${BUILD_NUMBER}
         }
     agent any
     stages {
@@ -53,12 +55,9 @@ pipeline {
         }
         stage('Liquibase Execution') {
             steps {
-                sh'''
-                   
-                    liquibase update
-
-                   '''
-                
+                script{
+                    liquibaseFlow.appci(liquibaseDeploymentFlow)
+                }
             }
         }
     }
@@ -73,7 +72,7 @@ pipeline {
             echo 'executing rollback due to failure'
 
             script {
-                sh 'liquibase rollback tag=rollback_tagversion_1.3'
+                sh 'liquibase rollback tag=${Tag} --defaultsFile=liquibase.properties'
             }
         }
     }
