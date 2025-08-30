@@ -34,6 +34,7 @@ properties([
 ])
 pipeline {
         environment {
+            LIQUIBASE_LICENSE_KEY = credentials('liquibaselicensekey')
             liquibaseupdate = 'liquibase-ci.flowfile.yaml'
             VAULT_TOKEN = vaultOperations.generateToken('VaultNS')
             Tag = "${PROJECT_KEY}_${BUILD_NUMBER}"
