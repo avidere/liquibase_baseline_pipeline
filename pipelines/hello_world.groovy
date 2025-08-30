@@ -17,7 +17,7 @@ properties([
         [
             $class : 'CascadeChoiceParameter',
             choiceType: 'PT_SINGLE_SELECT',
-            description: '<b><span style="color:orange;"> Select Branch for CI Build</span></b>'
+            description: '<b><span style="color:orange;"> Select Branch for CI Build</span></b>',
             filterLength: 1, filterable: true,
             name: 'BRANCH',
             referencedParameters: 'REPOSITORY_NAME',
