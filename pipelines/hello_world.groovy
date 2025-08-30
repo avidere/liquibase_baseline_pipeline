@@ -35,7 +35,7 @@ properties([
 pipeline {
         environment {
             liquibaseupdate = 'liquibase-ci.flowfile.yaml'
-            VAULT_TOKEN="hvs.CAESINwi0YfLFKF3V5ILT8gaqRli2B_E6dlae7M-3-JG5-9jGigKImh2cy5iRml1VGRZd3c5Z2NveTUzZlFNQXZSTlEueDNqREEQ2vsa"
+            VAULT_TOKEN = vaultOperations.generateToken('VaultNS')
             Tag = "${PROJECT_KEY}_${BUILD_NUMBER}"
         }
     agent any
@@ -56,7 +56,7 @@ pipeline {
         stage('Liquibase Execution') {
             steps {
                 script{
-                    liquibaseFlow.appci(liquibaseupdate)
+                   liquibaseFlow.appci(liquibaseupdate)
                 }
             }
         }
