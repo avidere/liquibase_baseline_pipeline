@@ -9,12 +9,40 @@ properties([
             name: 'PROJECT_KEY',
             defaultValue: 'avidere',
             description: 'Project key for the Liquibase project'
-        ),
-        string(
+        ),string(
             name: 'REPOSITORY_NAME',
             defaultValue: 'liquibase_actions',
             description: 'Repository name for the Liquibase project'
         ),
+        [
+            $class : 'CascadeChoiceParameter',
+            choiceType: 'PT_SINGLE_SELECT',
+            description: '<b><span style="color:orange;"> Select Branch for CI Build</span></b>'
+            filterLength: 1, filterable: true,
+            name: 'BRANCH',
+            referencedParameters: 'REPOSITORY_NAME',
+            script: [
+                $class: 'GroovyScript',
+                fallbackScript: [
+                    classpath: [],
+                    sandbox: false,
+                    script: 'return ["ERROR"]'
+                ],
+                script: [
+                    classpath: [],
+                    sandbox: false,
+                    script: '''
+                        def gettags = ("git ls-remote -h ssh:git@github.com:${PROJECT_KEY}/${REPOSITORY_NAME}.git").execute()
+                        x = gettags.text.readLines().collect { it.split()[1].replaceAll(\'refs/heads/\', \'\').replaceAll(\'refs/tags/\', \'\').replaceAll("\\\\^\\\\{\\\\}", \'\')}
+                        def mylist = []
+                        int number = 0
+                        y = x.findAll { it.startsWith("main") || it.startsWith("master") || it.startsWith("release/") || it.startsWith("hotfix/") || it.startsWith("feature/") }
+                        return y
+                    '''
+                ]
+            ]
+        ],
+
         string(
             name: 'BRANCH_NAME',
             defaultValue: 'master',
