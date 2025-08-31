@@ -72,6 +72,20 @@ pipeline {
                 }
             }
         }
+        stage("Create Artifact") {
+            steps {
+                script {
+                    createArtifact()
+                }
+            }
+        }
+        stage("Tag Creation") {
+            steps {
+                script {
+                    gitTagCreation()
+                }
+            }
+        }
     }
     post {
             always {
