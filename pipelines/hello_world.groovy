@@ -60,8 +60,8 @@ pipeline {
                     codeCheckout()
                     sh '''
                     set +xv
-                    envsubst < liquibase.properties > liquibase_temp.properties
-                    mv liquibase_temp.properties liquibase.properties
+                    envsubst < config/liquibase.properties > config/liquibase_temp.properties
+                    mv config/liquibase_temp.properties config/liquibase.properties
                     '''
                 }
             }
