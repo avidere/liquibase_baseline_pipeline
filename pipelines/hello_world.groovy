@@ -40,8 +40,11 @@ properties([
 pipeline {
         environment {
             LIQUIBASE_LICENSE_KEY = credentials('liquibaselicensekey')
+            liquibasePropFile = "Config" + "/liquibase.properties"
             liquibaseupdate = 'liquibase-ci.flowfile.yaml'
             VAULT_TOKEN = vaultOperations.generateToken('VaultNS')
+            PipelineType = 'CI'
+            DBType = 'MySQL'
             Tag = "${PROJECT_KEY}_${BUILD_NUMBER}"
         }
     agent any
@@ -100,7 +103,7 @@ pipeline {
                 script {
                     comment = sh(returnStdout: true, script: "echo \$(cat ${WORKSPACE}/${successFile})")
                     CDSummaryFileToSN(comment.trim())
-                    
+
                     if ( "${REQUEST_NUMBER}".startsWith("CHG") || "${REQUEST_NUMBER}".startsWith("REQ") ) {
                         ServiceNowUpdate()
                     } else (
