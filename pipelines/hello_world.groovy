@@ -84,7 +84,7 @@ pipeline {
             echo 'executing rollback due to failure'
 
             script {
-                sh 'liquibase rollback tag=${Tag} --defaultsFile=liquibase.properties'
+                sh 'pipeline failed'
             }
         }
     }
