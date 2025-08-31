@@ -81,20 +81,35 @@ pipeline {
                 }
             }
         }
-        stage("Tag Creation") {
-            steps {
-                script {
-                    gitTagCreation()
-                }
-            }
-        }
+        // stage("Tag Creation") {
+        //     steps {
+        //         script {
+        //             gitTagCreation()
+        //         }
+        //     }
+        // }
     }
     post {
             always {
-                echo 'Pipeline completed.'
+                script {
+                    StartComment = "Pipeline Deployment Summary \\n\\n Pipeline Name: $env.JOB_BASE_NAME\\n\\n$BUILD_TRIGGER_BY\\n\\n Pipeline URL : $env.BUILD_URL"
+                    CDSummaryFileToSN(StartComment)
+                }
             }
         success {
-            echo 'Pipeline succeeded.'
+                script {
+                    comment = sh(returnStdout: true, script: "echo \$(cat ${WORKSPACE}/${successFile})")
+                    CDSummaryFileToSN(comment.trim())
+                    if ( "${REQUEST_NUMBER}".startsWith("CHG") || "${REQUEST_NUMBER}".startsWith("REQ") ) {
+                        ServiceNowUpdate()
+                    } else (
+                        jiraCommentUpdate()
+                    )
+
+                    sh" set +XV;cat liquibase.log"
+                    printf "************************************\n\n Liquibase ${DBType} Output \n\n***********************\n\n"
+                    sh"set +XV;cat output.txt"
+                }
         }
         failure {
             echo 'executing rollback due to failure'
