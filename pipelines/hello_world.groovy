@@ -7,7 +7,8 @@ properties([
     parameters([
         string(
             name: 'REQUEST_NUMBER',
-            description: 'Please Enter Request/Jira Number Example: REQ0010001'
+            description: 'Please Enter Request/Jira Number Example: REQ0010001',
+            trim: true
         ),
         string(
             name: 'PROJECT_KEY',
