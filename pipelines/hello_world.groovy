@@ -110,9 +110,9 @@ pipeline {
                         jiraCommentUpdate()
                     )
 
-                    sh" set +XV;cat liquibase.log"
+                    sh" set +xv;cat liquibase.log"
                     printf "************************************\n\n Liquibase ${DBType} Output \n\n***********************\n\n"
-                    sh"set +XV;cat output.txt"
+                    sh"set +xv;cat output.txt"
                 }
         }
         failure {
