@@ -6,6 +6,10 @@ devopsControls()
 properties([
     parameters([
         string(
+            name: 'REQUEST_NUMBER',
+            description: 'Please Enter Request/Jira Number'
+        ),
+        string(
             name: 'PROJECT_KEY',
             defaultValue: 'avidere',
             description: 'Project key for the Liquibase project'
@@ -41,6 +45,13 @@ pipeline {
         }
     agent any
     stages {
+        stage('Input Validation') {
+            steps {
+                script {
+                    inputValidation()
+                }
+            }
+        }
         stage('clean workspace') {
             steps {
                 script {
