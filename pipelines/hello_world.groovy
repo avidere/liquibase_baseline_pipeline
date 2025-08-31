@@ -100,6 +100,7 @@ pipeline {
                 script {
                     comment = sh(returnStdout: true, script: "echo \$(cat ${WORKSPACE}/${successFile})")
                     CDSummaryFileToSN(comment.trim())
+                    
                     if ( "${REQUEST_NUMBER}".startsWith("CHG") || "${REQUEST_NUMBER}".startsWith("REQ") ) {
                         ServiceNowUpdate()
                     } else (
