@@ -90,13 +90,13 @@ pipeline {
                 }
             }
         }
-        // stage("Tag Creation") {
-        //     steps {
-        //         script {
-        //             gitTagCreation()
-        //         }
-        //     }
-        // }
+        stage("upload to nexus") {
+            steps {
+                script {
+                    uploadArtifact()
+                }
+            }
+        }
     }
     post {
             always {
