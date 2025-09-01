@@ -22,9 +22,10 @@ properties([
         
         string(
             name: 'BRANCH_NAME',
-            defaultValue: 'master',
+            defaultValue: 'main',
             description: 'Branch name to checkout'
         ),
+    
         string(
             name: 'CHANELOG_FILE',
             defaultValue: 'changelog/changelog.xml',
@@ -34,6 +35,11 @@ properties([
             name: 'ENVIRONMENT',
             choices: ['dev', 'qa', 'prod'],
             description: 'Select the environment to deploy to'
+        ),
+        choice(
+            name: 'ARTIFACT_GROUP',
+            choices: ['dev', 'qa', 'prod'],
+            description: 'Select the Artifact group'
         )
     ])
 ])
