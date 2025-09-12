@@ -93,7 +93,7 @@ pipeline {
         stage("upload to nexus") {
             steps {
                 script {
-                    uploadArtifact()
+                    uploadArtifact.artifactupload()
                 }
             }
         }
