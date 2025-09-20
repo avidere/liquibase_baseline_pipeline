@@ -13,14 +13,14 @@ properties([
         ),
         string(
             name: 'PROJECT_KEY',
-            defaultValue: 'avinashdere',
+            defaultValue: 'avidere',
             description: 'Enter Bitbucket project key'
         ),
         [
         $class: 'CascadeChoiceParameter',
         choiceType: 'PT_SINGLE_SELECT',
         description: 'Select repository',
-        name: 'REPO_NAME',
+        name: 'REPOSITORY_NAME',
         referencedParameters: 'PROJECT_KEY', // reactive to project key
         script: [
              $class: 'GroovyScript',
@@ -28,8 +28,6 @@ properties([
                  sandbox: true,
                  script: """
                     import groovy.json.JsonSlurper
-                    def PROJECT_KEY = "avidere"
-
                     // Replace <TOKEN> with your GitHub personal access token
                     def response = "curl -H 'Authorization: token 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' https://api.github.com/users/${PROJECT_KEY}/repos".execute().text
 
