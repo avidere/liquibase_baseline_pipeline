@@ -1,5 +1,6 @@
 @Library(['liquibase_shared_library@main', 'liquibase_devops_controls@main']) _
 import java.text.SimpleDateFormat
+
 loadEnvVars()
 devopsControls()
 
@@ -12,20 +13,41 @@ properties([
         ),
         string(
             name: 'PROJECT_KEY',
-            defaultValue: 'avidere',
-            description: 'Project key for the Liquibase project'
-        ),string(
-            name: 'REPOSITORY_NAME',
-            defaultValue: 'liquibase_actions',
-            description: 'Repository name for the Liquibase project'
+            defaultValue: 'avinashdere',
+            description: 'Enter Bitbucket project key'
         ),
-        
+        [
+        $class: 'CascadeChoiceParameter',
+        choiceType: 'PT_SINGLE_SELECT',
+        description: 'Select repository',
+        name: 'REPO_NAME',
+        referencedParameters: 'PROJECT_KEY', // reactive to project key
+        script: [
+             $class: 'GroovyScript',
+             script: [
+                 sandbox: true,
+                 script: """
+                    import groovy.json.JsonSlurper
+                    def PROJECT_KEY = "avidere"
+
+                    // Replace <TOKEN> with your GitHub personal access token
+                    def response = "curl -H 'Authorization: token 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' https://api.github.com/users/${PROJECT_KEY}/repos".execute().text
+
+                    def json = new JsonSlurper().parseText(response)
+
+                    // Return repo names for dropdown
+                    return json.collect { it.name }
+                    """
+                ]
+            ]
+        ],
+
         string(
             name: 'BRANCH_NAME',
             defaultValue: 'main',
             description: 'Branch name to checkout'
         ),
-    
+
         string(
             name: 'CHANELOG_FILE',
             defaultValue: 'changelog/changelog.xml',
@@ -46,7 +68,7 @@ properties([
 pipeline {
         environment {
             LIQUIBASE_LICENSE_KEY = credentials('liquibaselicensekey')
-            liquibasePropFile = "Config" + "/liquibase.properties"
+            liquibasePropFile = 'Config' + '/liquibase.properties'
             liquibaseupdate = 'liquibase-ci.flowfile.yaml'
             VAULT_TOKEN = vaultOperations.generateToken('VaultNS')
             PipelineType = 'CI'
@@ -78,19 +100,19 @@ pipeline {
         }
         stage('Liquibase Execution') {
             steps {
-                script{
-                   liquibaseFlow.appci(liquibaseupdate)
+                script {
+                    liquibaseFlow.appci(liquibaseupdate)
                 }
             }
         }
-        stage("Create Artifact") {
+        stage('Create Artifact') {
             steps {
                 script {
                     createArtifact()
                 }
             }
         }
-        stage("upload to nexus") {
+        stage('upload to nexus') {
             steps {
                 script {
                     uploadArtifact.artifactupload()
@@ -110,15 +132,15 @@ pipeline {
                     comment = sh(returnStdout: true, script: "echo \$(cat ${WORKSPACE}/${successFile})")
                     CDSummaryFileToSN(comment.trim())
 
-                    if ( "${REQUEST_NUMBER}".startsWith("CHG") || "${REQUEST_NUMBER}".startsWith("RITM") || "${REQUEST_NUMBER}".startsWith("REQ") ) {
+                    if ("${REQUEST_NUMBER}".startsWith('CHG') || "${REQUEST_NUMBER}".startsWith('RITM') || "${REQUEST_NUMBER}".startsWith('REQ')) {
                         ServiceNowUpdate()
                     } else (
                         jiraCommentUpdate()
                     )
 
-                    sh" set +xv;cat liquibase.log"
+                    sh' set +xv;cat liquibase.log'
                     printf "************************************\n\n Liquibase ${DBType} Output \n\n***********************\n\n"
-                    sh"set +xv;cat output.txt"
+                    sh'set +xv;cat output.txt'
                 }
         }
         failure {
