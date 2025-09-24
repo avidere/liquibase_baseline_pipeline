@@ -15,42 +15,11 @@ properties([
             name: 'PROJECT_KEY',
             defaultValue: 'avidere',
             description: 'Enter Bitbucket project key'
+        ),,string(
+            name: 'REPOSITORY_NAME',
+            defaultValue: 'liquibase_actions',
+            description: 'Repository name for the Liquibase project'
         ),
-        [
-        $class: 'CascadeChoiceParameter',
-        choiceType: 'PT_SINGLE_SELECT',
-        description: 'Select repository',
-        name: 'REPOSITORY_NAME',
-        referencedParameters: 'PROJECT_KEY', 
-        script: [
-             $class: 'GroovyScript',
-             script: [
-                 sandbox: true,
-                 script: """
-                        import groovy.json.JsonSlurper
-                        import jenkins.model.*
-                        import com.cloudbees.plugins.credentials.CredentialsProvider
-                        import com.cloudbees.plugins.credentials.common.StandardCredentials
-    
-                        def githubUsername = "avidere"
-                        def credentialId = "git-token"
-                        def githubToken = CredentialsProvider.lookupCredentials(
-                            StandardCredentials.class,
-                            Jenkins.instance,
-                            null,
-                            null
-                        ).find { c ->
-                            c.id == credentialId && c.metaClass.respondsTo(c, 'getSecret')
-                        }?.getSecret()?.getPlainText()
-                        def apiUrl = "https://api.github.com/users/${githubUsername}/repos"
-                        def response = "curl -s -H 'Authorization: token ${githubToken}' ${apiUrl}".execute().text
-                        def json = new JsonSlurper().parseText(response)
-                        json.collect { it.name }
-
-                    """
-                ]
-            ]
-        ],
 
         string(
             name: 'BRANCH_NAME',
