@@ -42,7 +42,7 @@ properties([
             filterLength: 1,
             filterable: true,
             name: 'Component_URL',
-            referencedParameters: 'PROJECT_KEY,GROUP,CI_BUILD_NUMBER',
+            referencedParameters: 'PROJECT_KEY,ARTIFACT_GROUP,CI_BUILD_NUMBER',
             script: groovyScript(
                 fallbackScript:
                 [
