@@ -15,10 +15,55 @@ properties([
             name: 'PROJECT_KEY',
             defaultValue: 'avidere',
             description: 'Enter Bitbucket project key'
-        ),,string(
+        ),string(
             name: 'REPOSITORY_NAME',
             defaultValue: 'liquibase_actions',
             description: 'Repository name for the Liquibase project'
+        ),
+        reactiveChoice(
+            choiceType: 'PT_SINGLE_SELECT',
+            description: 'select branch for for deployment',
+            filterLength: 1, filterable: false,
+            name: 'BRANCH_NAME',
+            randomName: 'choice-parameter-6254404173953',
+            referencedParameters: 'PROJECT_KEY,REPOSITORY_NAME',
+            script:
+            groovyScript(
+                fallbackScript:
+                [
+                    classpath: [],
+                    oldScript: '',
+                    sandbox: true,
+                    script:
+                    'return[\'ERROR\']'
+                ],
+                script:
+                [
+                    classpath: [],
+                    oldScript: '',
+                    sandbox: true,
+                    script:
+                    '''
+                    def PROJECT_KEY= "avidere"        // Replace with env/parameter if needed
+                    def REPOSITORY_NAME = "liquibase_actions"  // Replace with env/parameter if needed
+
+                    def command = "git ls-remote --heads git@github.com:${PROJECT_KEY}/${REPOSITORY_NAME}.git"
+                    def proc = command.execute()
+                    proc.waitFor()
+
+                    def branches = []
+                    if (proc.exitValue() == 0) {
+                        branches = proc.in.text.readLines()
+                            .collect { it.split()[1].replaceAll(\'refs/heads/\', \'\') }
+                            .findAll { it.startsWith("develop") || it.startsWith("feature") || it.startsWith("bugfix") || it.startsWith("release") || it.startsWith("main") || it.startsWith("master") }
+                    } else {
+                        branches = ["Error: cannot fetch branches"]
+                    }
+
+                    return branches
+                    '''
+                ]
+            )
         ),
 
         string(
