@@ -61,10 +61,6 @@ properties([
                     '''
                             import groovy.json.JsonSlurper
 
-                            def group = ARTIFACT_GROUP
-                            def projectKey = PROJECT_KEY
-                            def ciBuildNumber = CI_BUILD_NUMBER
-
                             def nexusHost = "http://nexus:8081"
                             def repository = "Liquibase-CICD"
                             def nexusUrl = "${nexusHost}/service/rest/v1/search?repository=${repository}"
@@ -88,9 +84,9 @@ properties([
                                     item.assets.each { asset ->
                                         def path = asset.path
                                         if (
-                                            path.contains("/${projectKey}/") &&
-                                            path.contains("/${group}/") &&
-                                            path.endsWith("-${ciBuildNumber}.zip")
+                                            path.contains("/${PROJECT_KEY}/") &&
+                                            path.contains("/${ARTIFACT_GROUP}/") &&
+                                            path.endsWith("-${CI_BUILD_NUMBER}.zip")
                                         ) {
                                             def cleanPath = path.startsWith("/") ? path.substring(1) : path
                                             def fullUrl = "${nexusHost}/repository/${repository}/${cleanPath}"
