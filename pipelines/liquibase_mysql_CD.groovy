@@ -152,13 +152,13 @@ pipeline {
         }
         stage('SQL Review') {
                 steps {
-                    ansiColor('xterm')
+                    ansiColor('xterm'){
                     script {
                         updateSQLReportValidation()
                     }
                 }
+            }
         }
-    }
         stage('Liquibase Execution') {
             steps {
                 script {
@@ -173,7 +173,7 @@ pipeline {
                 }
             }
         }
-}
+    }
     post {
         always {
             script {
@@ -207,3 +207,4 @@ pipeline {
         }
     }
 
+}
