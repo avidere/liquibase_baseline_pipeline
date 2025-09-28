@@ -112,7 +112,7 @@ properties([
 
 pipeline {
     environment {
-        SCHEMA_NAME = "schemaName"
+        SCHEMA_NAME = 'schemaName'
         LIQUIBASE_LICENSE_KEY = credentials('liquibaselicensekey')
         liquibasePropFile = 'Config' + '/liquibase.properties'
         liquibaseupdate = 'liquibase-cd.flowfile.yaml'
@@ -157,8 +157,8 @@ pipeline {
                         updateSQLReportValidation()
                     }
                 }
-            }
         }
+    }
         stage('Liquibase Execution') {
             steps {
                 script {
@@ -206,4 +206,4 @@ pipeline {
             }
         }
     }
-}
+
