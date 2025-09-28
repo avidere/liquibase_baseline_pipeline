@@ -180,6 +180,15 @@ pipeline {
 
             }
         }
+        stage('Drift Detection') {
+                steps {
+
+                    script {
+                        drift_Detection()
+                    }
+
+            }
+        }
         stage('Liquibase Execution') {
             steps {
                 script {
