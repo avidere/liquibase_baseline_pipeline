@@ -27,27 +27,27 @@ properties([
             description: 'Select the environment to deploy to'
         ),
         reactiveChoice(
-            choiceType: 'PT_SINGLE_SELECT', 
-            description: 'Select Artifact group ', 
-            filterLength: 1, 
-            filterable: false, 
-            name: 'ARTIFACT_GROUP', 
-            randomName: 'choice-parameter-21971747249596', 
-            referencedParameters: 'ENVIRONMENT', 
-            script: 
+            choiceType: 'PT_SINGLE_SELECT',
+            description: 'Select Artifact group ',
+            filterLength: 1,
+            filterable: false,
+            name: 'ARTIFACT_GROUP',
+            randomName: 'choice-parameter-21971747249596',
+            referencedParameters: 'ENVIRONMENT',
+            script:
             groovyScript(
                 fallbackScript: [
-                    classpath: [], 
-                    oldScript: '', 
-                    sandbox: false, 
-                    script: 
+                    classpath: [],
+                    oldScript: '',
+                    sandbox: false,
+                    script:
                     'return [\'ERROR\']'
-                ], 
+                ],
                 script: [
-                    classpath: [], 
-                    oldScript: '', 
-                    sandbox: false, 
-                    script: 
+                    classpath: [],
+                    oldScript: '',
+                    sandbox: false,
+                    script:
                     '''
                     if (ENVIRONMENT.equals(\'dev\')){
                         return [\'dev\',\'common\']
@@ -99,7 +99,7 @@ properties([
                             def authString = "${user}:${password}".bytes.encodeBase64().toString()
 
                             def artifactList = [] as List<String>
-                            
+
                                 def url = new URL(nexusUrl)
                                 def connection = url.openConnection()
                                 connection.setRequestProperty("Authorization", "Basic ${authString}")
@@ -173,11 +173,11 @@ pipeline {
         }
         stage('SQL Review') {
                 steps {
-                    
+
                     script {
                         updateSQLReportValidation()
                     }
-                
+
             }
         }
         stage('Liquibase Execution') {
