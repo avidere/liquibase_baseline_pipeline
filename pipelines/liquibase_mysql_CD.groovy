@@ -26,10 +26,39 @@ properties([
             choices: ['dev', 'qa', 'prod'],
             description: 'Select the environment to deploy to'
         ),
-        choice(
-            name: 'ARTIFACT_GROUP',
-            choices: ['dev', 'qa', 'prod'],
-            description: 'Select the artifact group'
+        reactiveChoice(
+            choiceType: 'PT_SINGLE_SELECT', 
+            description: 'Select Artifact group ', 
+            filterLength: 1, 
+            filterable: false, 
+            name: 'ARTIFACT_GROUP', 
+            randomName: 'choice-parameter-21971747249596', 
+            referencedParameters: 'ENVIRONMENT', 
+            script: 
+            groovyScript(
+                fallbackScript: [
+                    classpath: [], 
+                    oldScript: '', 
+                    sandbox: false, 
+                    script: 
+                    'return [\'ERROR\']'
+                ], 
+                script: [
+                    classpath: [], 
+                    oldScript: '', 
+                    sandbox: false, 
+                    script: 
+                    '''
+                    if (ENVIRONMENT.equals(\'dev\')){
+                        return [\'dev\',\'common\']
+                    } else if (ENVIRONMENT.equals(\'qa\')){
+                        return [\'qa\',\'common\']
+                    }  else if (ENVIRONMENT.equals(\'prod\')){
+                        return [\'prod\',\'common\']
+                    }
+                    '''
+                ]
+            )
         ),
         string(
             name: 'CI_BUILD_NUMBER',
