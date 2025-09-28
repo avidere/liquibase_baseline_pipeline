@@ -106,6 +106,16 @@ pipeline {
                 }
             }
         }
+        stage('Quality-Checks Validation') {
+            steps {
+                script {
+                    def liquibaseconf = libraryResource "config/checks_conf/liquibase.${DBType}-checks-settings.conf"
+                    writeFile file: "liquibase-checks-settings.conf", text: liquibaseconf
+                    echo "Proceeding with Quality checks output validation"
+                    qualityChecksValidation.app()
+                }
+            }
+        }
         stage('Liquibase Execution') {
             steps {
                 script {
