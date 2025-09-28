@@ -184,7 +184,7 @@ pipeline {
                 steps {
 
                     script {
-                        drift_Detection()
+                        driftDetection()
                     }
 
             }
