@@ -230,9 +230,22 @@ pipeline {
             }
         }
         failure {
-            echo 'Executing rollback due to failure'
+            
             script {
-                sh 'pipeline failed'
+               comment = sh(returnStdout: true, script: "echo \$(cat ${WORKSPACE}/${faileFile})")
+                CDSummaryFileToSN(comment.trim())
+
+                if ("${REQUEST_NUMBER}".startsWith('CHG') ||
+                    "${REQUEST_NUMBER}".startsWith('RITM') ||
+                    "${REQUEST_NUMBER}".startsWith('REQ')) {
+                    ServiceNowUpdate()
+                } else {
+                    jiraCommentUpdate()
+                    }
+
+                sh 'set +xv; cat liquibase.log'
+                printf "************************************\n\\n Liquibase ${DBType} Output \\n\\n***********************\\n\\n"
+                sh 'set +xv; cat output.txt'
             }
         }
     }

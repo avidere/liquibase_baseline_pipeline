@@ -152,10 +152,17 @@ pipeline {
                 }
         }
         failure {
-            echo 'executing rollback due to failure'
+            echo 'Pipeline failed'
 
             script {
-                sh 'pipeline failed'
+                    comment = sh(returnStdout: true, script: "echo \$(cat ${WORKSPACE}/${faileFile})")
+                    CDSummaryFileToSN(comment.trim())
+
+                    if ("${REQUEST_NUMBER}".startsWith('CHG') || "${REQUEST_NUMBER}".startsWith('RITM') || "${REQUEST_NUMBER}".startsWith('REQ')) {
+                        ServiceNowUpdate()
+                    } else (
+                        jiraCommentUpdate()
+                    )
             }
         }
     }
