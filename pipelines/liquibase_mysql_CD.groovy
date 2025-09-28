@@ -70,8 +70,7 @@ properties([
                             def authString = "${user}:${password}".bytes.encodeBase64().toString()
 
                             def artifactList = [] as List<String>
-
-                            try {
+                            
                                 def url = new URL(nexusUrl)
                                 def connection = url.openConnection()
                                 connection.setRequestProperty("Authorization", "Basic ${authString}")
@@ -94,13 +93,6 @@ properties([
                                         }
                                     }
                                 }
-
-                                if (artifactList.isEmpty()) {
-                                    artifactList << "No artifact found for build ${ciBuildNumber}".toString()
-                                }
-                            } catch (Exception e) {
-                                artifactList << "ERROR: ${e.message}".toString()
-                            }
 
                             return artifactList
                         '''
