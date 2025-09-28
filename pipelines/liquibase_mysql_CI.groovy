@@ -76,7 +76,7 @@ pipeline {
         environment {
             SCHEMA_NAME = "${schemaName}"
             LIQUIBASE_LICENSE_KEY = credentials('liquibaselicensekey')
-            liquibasePropFile = 'Config' + '/liquibase.properties'
+            liquibasePropFile = 'config' + '/liquibase.properties'
             liquibaseupdate = 'liquibase-ci.flowfile.yaml'
             VAULT_TOKEN = vaultOperations.generateToken('VaultNS')
             PipelineType = 'CI'
