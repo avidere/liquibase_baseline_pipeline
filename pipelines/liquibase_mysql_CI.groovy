@@ -36,10 +36,39 @@ properties([
             choices: ['dev', 'qa', 'prod'],
             description: 'Select the environment to deploy to'
         ),
-        choice(
+        reactiveChoice(
+            choiceType: 'PT_SINGLE_SELECT',
+            description: 'Select Artifact group ',
+            filterLength: 1,
+            filterable: false,
             name: 'ARTIFACT_GROUP',
-            choices: ['dev', 'qa', 'prod'],
-            description: 'Select the Artifact group'
+            randomName: 'choice-parameter-21971747249596',
+            referencedParameters: 'ENVIRONMENT',
+            script:
+            groovyScript(
+                fallbackScript: [
+                    classpath: [],
+                    oldScript: '',
+                    sandbox: false,
+                    script:
+                    'return [\'ERROR\']'
+                ],
+                script: [
+                    classpath: [],
+                    oldScript: '',
+                    sandbox: false,
+                    script:
+                    '''
+                    if (ENVIRONMENT.equals(\'dev\')){
+                        return [\'dev\',\'common\']
+                    } else if (ENVIRONMENT.equals(\'qa\')){
+                        return [\'qa\',\'common\']
+                    }  else if (ENVIRONMENT.equals(\'prod\')){
+                        return [\'prod\',\'common\']
+                    }
+                    '''
+                ]
+            )
         )
     ])
 ])
