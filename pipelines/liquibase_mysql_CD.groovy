@@ -150,28 +150,30 @@ pipeline {
                 }
             }
         }
+        stage('SQL Review') {
+                steps {
+                    ansiColor('xterm')
+                    script {
+                        updateSQLReportValidation()
+                    }
+                }
+            }
+        }
         stage('Liquibase Execution') {
             steps {
                 script {
-                    liquibaseFlow.appci(liquibaseupdate)
+                    liquibaseFlow.appcd(liquibaseupdate)
                 }
             }
         }
-        stage('Create Artifact') {
+        stage('upload snapshot') {
             steps {
                 script {
-                    createArtifact()
+                    uploadArtifact.snapshotupload()
                 }
             }
         }
-        stage('Upload to Nexus') {
-            steps {
-                script {
-                    uploadArtifact.artifactupload()
-                }
-            }
-        }
-    }
+}
     post {
         always {
             script {
