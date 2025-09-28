@@ -29,12 +29,12 @@ properties([
         choice(
             name: 'ARTIFACT_GROUP',
             choices: ['dev', 'qa', 'prod'],
-            description: 'Select the artifact group (redundant maybe with GROUP)'
+            description: 'Select the artifact group'
         ),
         string(
             name: 'CI_BUILD_NUMBER',
-            defaultValue: '12',
-            description: 'CI build number (artifact suffix)'
+            defaultValue: '',
+            description: 'CI build number'
         ),
         reactiveChoice(
             choiceType: 'PT_SINGLE_SELECT',
