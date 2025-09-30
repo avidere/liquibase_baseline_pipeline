@@ -88,7 +88,7 @@ pipeline {
         stage('Input Validation') {
             steps {
                 script {
-                    inputValidation()
+                    inputValidation.app()
                 }
             }
         }
