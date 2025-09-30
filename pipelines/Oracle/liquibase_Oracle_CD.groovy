@@ -134,6 +134,8 @@ properties([
 pipeline {
     environment {
         SCHEMA_NAME = "${schemaName}"
+        PATH = "/opt/oracle/instantclient_21_19:$PATH"
+        LD_LIBRARY_PATH = "/opt/oracle/instantclient_21_19:$LD_LIBRARY_PATH"
         LIQUIBASE_LICENSE_KEY = credentials('liquibaselicensekey')
         liquibasePropFile = 'config' + '/liquibase.properties'
         liquibaseupdate = 'liquibase-cd.flowfile.yaml'
