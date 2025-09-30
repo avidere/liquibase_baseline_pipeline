@@ -17,7 +17,7 @@ properties([
             description: 'Enter Bitbucket project key'
         ),string(
             name: 'REPOSITORY_NAME',
-            defaultValue: 'liquibase_actions',
+            defaultValue: 'liquibase_Oracle_DB',
             description: 'Repository name for the Liquibase project'
         ),
         string(
@@ -80,7 +80,7 @@ pipeline {
             liquibaseupdate = 'liquibase-ci.flowfile.yaml'
             VAULT_TOKEN = vaultOperations.generateToken('VaultNS')
             PipelineType = 'CI'
-            DBType = 'MySQL'
+            DBType = 'Oracle'
             Tag = "${PROJECT_KEY}_${BUILD_NUMBER}"
         }
     agent any
