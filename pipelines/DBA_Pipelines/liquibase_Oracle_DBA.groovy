@@ -6,7 +6,7 @@ loadEnvVars()
 properties([
     parameters([
         string(
-            description: 'Please Enter Valid Service now Change Request',
+            description: 'Please Enter Request/Jira Number Example: REQ0010001',
             name: 'REQUEST_NUMBER',
             trim: true
         ),
@@ -94,14 +94,14 @@ properties([
                 fallbackScript: [
                     classpath: [],
                     oldScript: '',
-                    sandbox: true,
+                    sandbox: false,
                     script:
                     'return [\'ERROR\']'
                 ],
                 script: [
                     classpath: [],
                     oldScript: '',
-                    sandbox: true,
+                    sandbox: false,
                     script:
                     '''
                     if (ACCESS_REQUEST) {
@@ -145,19 +145,22 @@ properties([
                 ]
             )
         ),
-        hidden(defaultValue: 'root-changelog.xml', name: 'CHANGE_LOG')
+        string(
+            description: 'Please Select Changelogfile',
+            name: 'CHANGE_LOG',
+            defaultValue: 'root-changelog.xml',
+            trim: true
+        )
     ])
 ])
 pipeline {
         environment {
-            SCHEMA_NAME = "${schemaName}"
+            vault_ns = 'admin'
+            VAULT_TOKEN = vaultOperations.generateToken('admin')
             LIQUIBASE_LICENSE_KEY = credentials('liquibaselicensekey')
-            liquibasePropFile = 'config' + '/liquibase.properties'
             liquibaseupdate = 'liquibase-dba.flowfile.yaml'
             liquibasevalidate = 'liquibase-dba-validate.flowfile.yaml'
-            VAULT_TOKEN = vaultOperations.generateToken('VaultNS')
-            PipelineType = 'CI'
-            DBType = 'MySQL'
+            DBType = 'Oracle'
             Tag = "${PROJECT_KEY}_${BUILD_NUMBER}"
         }
     agent any
@@ -237,7 +240,7 @@ pipeline {
             echo 'Pipeline failed'
 
             script {
-                    comment = sh(returnStdout: true, script: "echo \$(cat ${WORKSPACE}/${faileFile})")
+                    comment = sh(returnStdout: true, script: "echo \$(cat ${WORKSPACE}/${failFile})")
                     CDSummaryFileToSN(comment.trim())
 
                     if ("${REQUEST_NUMBER}".startsWith('CHG') || "${REQUEST_NUMBER}".startsWith('RITM') || "${REQUEST_NUMBER}".startsWith('REQ')) {
