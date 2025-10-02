@@ -16,7 +16,7 @@ properties([
             name: 'ENVIRONMENT'
         ),
         activeChoice(
-            choiceType: 'PT_SINGLE_SELECT',
+            choiceType: 'PT_RADIO',
             description: 'Select Request type to proceed',
             filterLength: 1,
             filterable: false,
@@ -50,7 +50,7 @@ properties([
             trim: true
         ),
         reactiveChoice(
-            choiceType: 'PT_SINGLE_SELECT',
+            choiceType: 'PT_CHECKBOX',
             description: 'Select ACCESS_REQUEST filed if change is related to Access Request.',
             filterLength: 1,
             filterable: false,
@@ -81,38 +81,37 @@ properties([
                 ]
             )
         ),
-        reactiveChoice(
-            choiceType: 'PT_SINGLE_SELECT',
-            description: 'Provide the USER ID for which Access change is requested',
-            filterLength: 1,
-            filterable: false,
-            name: 'USER_ID',
-            randomName: 'choice-parameter-20276392251066',
-            referencedParameters: 'ACCESS_REQUEST',
-            script:
+        activeChoiceHtml(
+            choiceType: 'ET_FORMATTED_HTML', 
+            description: 'Provide the USER ID for which Access change is requested', 
+            name: 'USER_ID', 
+            omitValueField: true, 
+            randomName: 'choice-parameter-17220894630277', 
+            referencedParameters: 'ACCESS_REQUEST', 
+            script: 
             groovyScript(
                 fallbackScript: [
-                    classpath: [],
-                    oldScript: '',
-                    sandbox: false,
-                    script:
+                    classpath: [], 
+                    oldScript: '', 
+                    sandbox: false, 
+                    script: 
                     'return [\'ERROR\']'
-                ],
+                ], 
                 script: [
-                    classpath: [],
-                    oldScript: '',
-                    sandbox: false,
-                    script:
+                    classpath: [], 
+                    oldScript: '', 
+                    sandbox: false, 
+                    script: 
+                    '''                    
+                            if (ACCESS_REQUEST) {
+                                return """<input type="text" class="setting-input" name="value">"""
+                            } else {
+                                return """<input type="hidden" class="setting-input" name="value" vale="USER ID is not required">"""
+                            }
                     '''
-                    if (ACCESS_REQUEST) {
-                        return """<input type="text" class="setting-input" name="value">"""
-                    } else {
-                        return """<input type="hidden" class="setting-input" name="value" vale="USER ID is not required">"""
-                    }
-                    '''
-                ]
-            )
-        ),
+                    ]
+                )
+            ),
         reactiveChoice(
             choiceType: 'PT_SINGLE_SELECT',
             description: 'Select the type of Access Request',
@@ -201,7 +200,7 @@ pipeline {
                 script {
 
                     if (params.REQUEST_TYPE == 'DEPLOYMENT') {
-                        echo "proceeding with checks output validation"
+                        echo "proceeding with deployment request"
                         liquibaseFlow.dba(liquibaseupdate)
                     } else {
                         echo "proceeding with validation request"
@@ -240,7 +239,7 @@ pipeline {
             echo 'Pipeline failed'
 
             script {
-                    comment = sh(returnStdout: true, script: "echo \$(cat ${WORKSPACE}/${failFile})")
+                    comment = sh(returnStdout: true, script: "echo \$(cat ${WORKSPACE}/${faileFile})")
                     CDSummaryFileToSN(comment.trim())
 
                     if ("${REQUEST_NUMBER}".startsWith('CHG') || "${REQUEST_NUMBER}".startsWith('RITM') || "${REQUEST_NUMBER}".startsWith('REQ')) {
