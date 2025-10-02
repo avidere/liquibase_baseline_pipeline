@@ -82,27 +82,27 @@ properties([
             )
         ),
         activeChoiceHtml(
-            choiceType: 'ET_FORMATTED_HTML', 
-            description: 'Provide the USER ID for which Access change is requested', 
-            name: 'USER_ID', 
-            omitValueField: true, 
-            randomName: 'choice-parameter-17220894630277', 
-            referencedParameters: 'ACCESS_REQUEST', 
-            script: 
+            choiceType: 'ET_FORMATTED_HTML',
+            description: 'Provide the USER ID for which Access change is requested',
+            name: 'USER_ID',
+            omitValueField: true,
+            randomName: 'choice-parameter-17220894630277',
+            referencedParameters: 'ACCESS_REQUEST',
+            script:
             groovyScript(
                 fallbackScript: [
-                    classpath: [], 
-                    oldScript: '', 
-                    sandbox: false, 
-                    script: 
+                    classpath: [],
+                    oldScript: '',
+                    sandbox: false,
+                    script:
                     'return [\'ERROR\']'
-                ], 
+                ],
                 script: [
-                    classpath: [], 
-                    oldScript: '', 
-                    sandbox: false, 
-                    script: 
-                    '''                    
+                    classpath: [],
+                    oldScript: '',
+                    sandbox: false,
+                    script:
+                    '''
                             if (ACCESS_REQUEST) {
                                 return """<input type="text" class="setting-input" name="value">"""
                             } else {
@@ -189,7 +189,7 @@ pipeline {
             steps {
                 script {
                     if (params.REQUEST_TYPE == 'DEPLOYMENT') {
-                        echo "proceeding with checks output validation"
+                        echo 'proceeding with checks output validation'
                         qualityChecksValidation.dba()
                     }
                 }
@@ -198,19 +198,24 @@ pipeline {
         stage('Liquibase Execution') {
             steps {
                 script {
-
                     if (params.REQUEST_TYPE == 'DEPLOYMENT') {
-                        echo "proceeding with deployment request"
+                        echo 'proceeding with deployment request'
                         liquibaseFlow.dba(liquibaseupdate)
                     } else {
-                        echo "proceeding with validation request"
+                        echo 'proceeding with validation request'
                         liquibaseFlow.dba(liquibasevalidate)
                     }
-                    
                 }
             }
         }
-
+        stage('upload Artifact') {
+            steps {
+                script {
+                    createArtifact.dba()
+                    uploadArtifact.dba()
+                }
+            }
+        }
     }
     post {
             always {
