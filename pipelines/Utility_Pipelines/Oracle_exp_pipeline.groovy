@@ -27,7 +27,7 @@ properties([
         ),
 
         string(
-            name: 'CHANELOG_FILE',
+            name: 'CHANGE_LOG',
             defaultValue: 'changelog/changelog.xml',
             description: 'Changelog file for Liquibase'
         ),
