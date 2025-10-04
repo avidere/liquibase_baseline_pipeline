@@ -139,7 +139,7 @@ pipeline {
         LIQUIBASE_LICENSE_KEY = credentials('liquibaselicensekey')
         liquibasePropFile = 'config' + '/liquibase.properties'
         liquibaseupdate = 'liquibase-cd.flowfile.yaml'
-        VAULT_TOKEN = vaultOperations.generateToken('VaultNS')
+        VAULT_TOKEN = vaultOperations.generateToken('admin')
         PipelineType = 'CD'
         DBType = 'MySQL'
         Tag = "${PROJECT_KEY}_${BUILD_NUMBER}"

@@ -155,7 +155,7 @@ pipeline {
             liquibasePropFile = 'config' + '/liquibase.properties'
             liquibaseupdate = 'liquibase-dba.flowfile.yaml'
             liquibasevalidate = 'liquibase-dba-validate.flowfile.yaml'
-            VAULT_TOKEN = vaultOperations.generateToken('VaultNS')
+            VAULT_TOKEN = vaultOperations.generateToken('admin')
             PipelineType = 'CI'
             DBType = 'MySQL'
             Tag = "${PROJECT_KEY}_${BUILD_NUMBER}"

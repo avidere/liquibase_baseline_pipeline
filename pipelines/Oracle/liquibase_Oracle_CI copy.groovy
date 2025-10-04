@@ -80,7 +80,7 @@ pipeline {
             LIQUIBASE_LICENSE_KEY = credentials('liquibaselicensekey')
             liquibasePropFile = 'config' + '/liquibase.properties'
             liquibaseupdate = 'liquibase-ci.flowfile.yaml'
-            VAULT_TOKEN = vaultOperations.generateToken('VaultNS')
+            VAULT_TOKEN = vaultOperations.generateToken('admin')
             PipelineType = 'CI'
             DBType = 'Oracle'
             Tag = "${PROJECT_KEY}_${BUILD_NUMBER}"
